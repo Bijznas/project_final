@@ -1,0 +1,113 @@
+.info{
+    height: 100px;
+    width: 100px;
+    background-color: #444444;
+}
+
+.game-wrapper{
+	width:1200px;
+	margin:0 auto;
+	overflow:hidden;
+	height:600px;
+		
+	position:relative;
+}
+
+.game-menu{
+	width:1000px;
+	padding:100px;
+	position:absolute;
+	background:#999;
+	left:0;
+	top:0;
+}
+
+.right{
+	width:250px;
+	float:right;	
+}
+
+.left{
+	width:550px;
+	float:left;	
+}
+
+.game-play{
+	width:1200px;
+	position:absolute;
+	background:#F00;
+	left:-1200px;
+	top:0;
+}
+.game-table{
+	position:relative;
+	width:1000px;
+	height:100px;
+	margin:0 auto;
+	
+	background:#003300;
+	height:500px;
+	border-radius:250px;
+	border:#FFCC00 10px solid;
+	
+}
+
+.boxx{
+	width:80px;
+	height:80px;
+	background:#003399;
+	position:absolute;
+	left:450px;	
+	top:0;
+}
+
+.boxx2{
+	width:80px;
+	height:80px;
+	background:#003399;
+	position:absolute;
+	left:450px;	
+	top:400px;
+}
+
+.boxx3{
+	width:80px;
+	height:80px;
+	background:#003399;
+	position:absolute;
+	left:200px;	
+	top:370px;
+}
+
+.boxx4{
+	width:80px;
+	height:80px;
+	background:#003399;
+	position:absolute;
+	left:700px;	
+	top:370px;
+}
+
+.boxx5{
+	width:80px;
+	height:80px;
+	background:#003399;
+	position:absolute;
+	left:50px;	
+	top:250px;
+}
+
+.boxx6{
+	width:80px;
+	height:80px;
+	background:#003399;
+	position:absolute;
+	left:850px;	
+	top:250px;
+}
+.showinfo{
+	text-align:center;
+	margin-top:300px;
+	color:#CCC;
+	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+}

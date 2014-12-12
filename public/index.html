@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Flush Game</title>
+    <link href="css/reset.css" rel="stylesheet" type="text/css" >
+    <link href="css/game.css" rel="stylesheet" type="text/css" >
+  </head>
+  <body>
+  	<div class="game-wrapper">
+    
+    	<div class="game-menu" id="game-menu">
+            <div class="left">
+                <form action="">
+                    <input type="text" id='name' placeholder="Enter Your Name">
+                    <button id = 'joinBut'>Join Game</button>
+                </form>
+            </div>
+            <div class="right">
+                <ul id="playerlist">
+                </ul>
+            </div>
+            
+            <div class="clear"></div>
+		</div>       
+        
+        <div class="game-play" id="game-play">
+        	<div class="game-table" id="game-table">
+        		<div class="showinfo" id="showinfo">Waiting for the player to join....</div>
+                <div class="boxx"></div>
+                <div class="boxx2"></div>
+                <div class="boxx3"></div>
+                <div class="boxx4"></div>
+                <div class="boxx5"></div>
+                <div class="boxx6"></div>
+        	</div>
+        </div>    
+        
+    </div>
+  
+  
+  
+  
+    
+    
+      
+      
+      
+      <script src="/socket.io/socket.io.js"></script>
+      <script src="js/animator.js"></script>
+      <script src="js/game.js" ></script> 
+      
+      
+</body>
+</html>
