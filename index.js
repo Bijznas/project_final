@@ -5,7 +5,8 @@ var io = require('socket.io')(http);
 var Card = require('./public/models/card.js');
 var CardDeck = require('./public/models/CardDeck.js');
 var Player = require('./public/models/player.js');
-
+var isRunning = false;
+var count = 0;
 app.use(express.static(__dirname + '/public'));
 
 var players = [];  
@@ -22,25 +23,31 @@ io.on('connection', function(socket){
 		var player = new Player(socket.id, name);
 		players.push(player);
     	socket.emit('joined', player);
-		console.log(players.length + '  lengths');
+		io.sockets.emit('addToView', {players:player, playerid:player.id});
+		//console.log(players.length + '  lengths');
 		
 		
 		if (players.length < 2) {
 			io.emit("logging", {message: "Waiting for other players to join." });
+			//socket.emit("logid",player.id);
 			//io.sockets.emit("waiting", {message: "Waiting for other player to join."});
-      } else {
-			io.sockets.emit("logging", {message: "Play will commence shortly." });
+      	}else if(players.length == 2) {
+			io.sockets.emit("logging", {message: "Play will commence shortly."});
+			//socket.emit("logid",player.id);
 			var deck = new CardDeck();
 			deck.setupCardsDeck();
-			console.log(deck.cards[0])
+			console.log(deck.cards[0]);
 			//emit counter
-			var countdown = 10; //3 seconds in reality...
+			var countdown = 5; //3 seconds in reality...
 			var idCounter = setInterval(function() {
-				if(countdown == 0){
+				if(countdown == 1){
+					isRunning = true;
 					clearInterval(idCounter);
-					io.sockets.emit('distribute_cards', { player: players });
+					io.sockets.emit('collect_bid', { players: players});
+					count = players.length;
+					io.sockets.emit('distribute_cards', { players: players, deck:deck });
 					
-				}else{
+				}else if(!isRunning){
 					countdown--;
 					io.sockets.emit('timer', { countdown: 'The game will start in '+countdown+' secs' });
 				}
@@ -52,6 +59,34 @@ io.on('connection', function(socket){
 		
   
   	});	
+	
+	socket.on('round', function(playerid){
+		count --;
+		
+		if(count == 0){
+			console.log('starting the game');
+			loopTurn(0);
+		} 
+		
+		
+		
+	});
+	
+	function loopTurn(pos){
+		io.sockets.emit('notifyTurn', {pos:pos});
+		
+		//emit counter
+		var countdown = 100; //3 seconds in reality...
+		var idCounter = setInterval(function() {
+			if(countdown == 1){
+				clearInterval(idCounter);
+				
+			}else{
+				countdown--;
+				io.sockets.emit('timeout', { countdown: countdown , pos:pos});
+			}
+		}, 100);
+	}
 	
 	socket.on('disconnect', function(){
 		for(var i = 0;i< players.length;i++){

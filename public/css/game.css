@@ -51,14 +51,59 @@
 	border:#FFCC00 10px solid;
 	
 }
-
-.boxx{
+.card-layout{
 	width:80px;
-	height:80px;
+	position:absolute;
+	left:450px;	
+	top:0;
+	height:112px;
+}
+
+.player-layout{
+	padding:3px 5px;
+	color:#FFFFFF;
+	border:#0066CC 1px solid;
+	position:absolute;
+	background:#999;
+	width:110px;
+	border-radius:25px;
+	-moz-border-radius: 25px;
+}
+.boxx{
+	width:81px;
+	height:112px;
 	background:#003399;
 	position:absolute;
 	left:450px;	
 	top:0;
+	background:url(../images/backs.png) no-repeat;
+}
+
+.button-controls{
+	width:450px;
+	margin: 0 auto;
+	background:#00CC33;	
+}
+.button-controls button{
+	padding:5px 10px;
+	border-radius:15px;
+	-moz-border-radius: 15px;
+}
+.buttons{
+	padding:5px 10px;
+	border-radius:15px;
+	-moz-border-radius: 15px;
+	position:absolute;
+	opacity:0.5;
+}
+.buttons:hover{
+	cursor:pointer;
+	opacity:1;
+}
+.childtimer{
+	width:0px;
+	background:#009933;
+	height:5px;
 }
 
 .boxx2{

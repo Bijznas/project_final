@@ -5,16 +5,16 @@ function Card(rank, suit) {
 	this.rank = rank;
 	this.suit = suit;
 	
-	this.toString   = cardToString;
+	//this.toString   = cardToString;
 	//this.divNode = makeNode();
 	
   
   //this function create a div node for the card
-	function makeNode(){
+	this.makeNode = function(){
 		var tempNode = document.createElement("div");
 		tempNode.className='card-layout';
 		tempNode.style.background='url(images/backs.png) 0px 0px no-repeat';
-		return tempNode;
+		that.divNode = tempNode;
 
 	}
 	
@@ -42,10 +42,10 @@ function Card(rank, suit) {
 		//that.divNode.style.background='url(images/'+y+'.png) '+x+'px no-repeat';
 	}
 	
-	function cardToString() {
+	this.cardToString = function() {
 		var rank, suit;
 
-		switch (this.rank) {
+		switch (that.rank) {
 			case "A" :
       		  rank = "Ace";
       		  break;
@@ -90,7 +90,7 @@ function Card(rank, suit) {
       		  break;
   		}
 
-		switch (this.suit) {
+		switch (that.suit) {
 			case "C" :
 			  suit = "Clubs";
 			  break;

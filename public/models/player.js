@@ -1,6 +1,12 @@
 function Player(playerID, name) {
 	this.id = playerID;
 	this.name = name;
+	this.node='';
+	this.seeButton;
+	this.isPlaying = false;
+	this.isBlind = true;
+	this.isTimeout = false;
+	this.isDisconnected = false;
 	this.tableID = "";
 	this.hand = [];
 	this.status = "";

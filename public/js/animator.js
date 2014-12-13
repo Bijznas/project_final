@@ -14,6 +14,7 @@ function Animator(){
 	this.xdirection=false;
 	var posi;
 	var val=0;
+	var numPlayers=2;
 	
 	
 	this.animate = function(el,props,duration,pos,clb_function,el2){
@@ -100,9 +101,9 @@ function Animator(){
 				
 			}
 			
-			if(that.props.rot && ((posi-1)<5 || (posi-1)>= 2*5)){
+			if(that.props.rot && ((posi-1)<numPlayers || (posi-1)>= 2*numPlayers)){
 				var valrot;
-				if((posi-1)<5){
+				if((posi-1)<numPlayers){
 					valrot = -(that.props.rot)/(that.duration/frequency)*counter;
 				}else{
 					valrot = (that.props.rot)/(that.duration/frequency)*counter;
