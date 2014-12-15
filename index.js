@@ -51,7 +51,7 @@ io.on('connection', function(socket){
 			deck.setupCardsDeck();
 			console.log(deck.cards[0]);
 			//emit counter
-			var countdown = 20; //3 seconds in reality...
+			var countdown = 5; //3 seconds in reality...
 			var idCounter = setInterval(function() {
 				if(countdown == 1){
 					
@@ -75,6 +75,7 @@ io.on('connection', function(socket){
 		}else{
 			waiting_players.push(player);
 			socket.emit('joined', player);
+			io.sockets.emit('addToView', {players:players, playerid:player.id});
 		}
 		
 		
@@ -89,7 +90,7 @@ io.on('connection', function(socket){
 		console.log('card:'+players[data.pos].hand.length)
 		if(count == 0){
 			console.log('starting the game');
-			loopTurn(0);
+			loopTurn(-1);
 		} 
 		
 		
@@ -101,30 +102,64 @@ io.on('connection', function(socket){
 			players[data.pos].isFolded = true;	
 			io.sockets.emit('folded', {pos:data.pos});
 		}
-		var check= data.pos;
 		
-		if(check+1 >= players.length){check = 0}
-			else{check = check+1}
-			
-		while(check != data.pos){
-			console.log('check:' + check + ' pos:' + data.pos);
-			
-			console.log(players[check].isFolded + '  ' +players[check].isTimeout == false+'  '+ players[check].isDisconnected );
-			if(players[check].isFolded == false && players[check].isTimeout == false && players[check].isDisconnected==false ){
-				console.log('inside');
-				loopTurn(check);
-				break;
-			}
+		if(data.type == 'continue'){
+			io.sockets.emit('continueresponse', {pos:data.pos});
+		}
+		loopTurn(data.pos);
+		
+	});
+	
+	
+	
+	function loopTurn(pos){
+		var dontContinue=onlyOnePlayer();
+		if(!dontContinue && dontContinue !==0){
+		
+		
+			var check=pos;
 			
 			if(check+1 >= players.length){check = 0}
 				else{check = check+1}
+			
+			while(check != pos){
+				console.log('check:' + check + ' pos:' + pos);
+				
+				console.log(players[check].isFolded + '  ' +players[check].isTimeout+'  '+ players[check].isDisconnected );
+				if(players[check].isFolded == false && players[check].isTimeout == false && players[check].isDisconnected==false ){
+					console.log('inside');
+					
+					
+					io.sockets.emit('notifyTurn', {pos:check});
+					
+					//emit counter
+					var countdown = 150; //3 seconds in reality...
+					idTimeout = setInterval(function() {
+						if(countdown == 0){
+							clearInterval(idTimeout);
+							players[check].isTimeout = true;
+							io.sockets.emit('player-timeout', { pos:check});
+							loopTurn(check);
+						
+						}else{
+							countdown--;
+							io.sockets.emit('runtimer', { countdown: countdown , pos:check});
+						}
+					}, 400);
+		
+					break;
+				}
+			
+					if(check+1 >= players.length){check = 0}
+						else{check = check+1}
 			//if(check == data.pos)
+			}
+		}else{
+			console.log('player'+dontContinue+1+'wins');	
 		}
-		
-		
-		 
-		
-	});
+			
+	}
+	
 	
 	socket.on('call', function(data){
 		clearInterval(idTimeout);
@@ -150,23 +185,6 @@ io.on('connection', function(socket){
 		
 		
 	});
-	
-	function loopTurn(pos){
-		io.sockets.emit('notifyTurn', {pos:pos});
-		
-		//emit counter
-		var countdown = 100; //3 seconds in reality...
-		idTimeout = setInterval(function() {
-			if(countdown == 0){
-				clearInterval(idTimeout);
-				
-			}else{
-				countdown--;
-				io.sockets.emit('timeout', { countdown: countdown , pos:pos});
-			}
-		}, 500);
-	}
-	
 	socket.on('disconnect', function(){
 		for(var i = 0;i< players.length;i++){
 			if(players[i].id == socket.id){
@@ -196,6 +214,22 @@ io.on('connection', function(socket){
 		players[data.pos].isBlind = false;
 		io.sockets.emit('cardseen', {pos:data.pos});
 	});
+	
+	function onlyOnePlayer(){
+		var pos=-1;
+		var count = 0;
+		for(var i =0;i<players.length;i++){
+			if(players[i].isFolded == false && players[i].isTimeout == false && players[i].isDisconnected==false ){
+				pos =i;
+				count++;
+			}	
+		}
+		if(count>1){
+			return false;
+		}else {
+			return pos;	
+		}
+	}
 
   
 });

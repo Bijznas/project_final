@@ -124,7 +124,7 @@ socket.on("notifyTurn", function(data) {
   
 });
 
-socket.on("timeout", function(data) {
+socket.on("runtimer", function(data) {
 	var pos = data.pos;
 	
 	 game.timer(data);
@@ -134,15 +134,28 @@ socket.on("timeout", function(data) {
 socket.on("cardseen", function(data) {
 	var pos = data.pos;
 	game.players[pos].isBlind = false;
-	game.players[pos].node.innerHTML += 'card seen';
+	game.players[pos].node.children[0].innerHTML += ' card seen';
   
 });
 
 socket.on("folded", function(data) {
 	var pos = data.pos;
-	
+	game.players[pos].node.children[1].style.width = '0px';
 	game.players[pos].isFolded = true;
 	game.createResultNode(pos, 'folded');
+	
+});
+socket.on("continueresponse", function(data) {
+	var pos = data.pos;
+	game.players[pos].node.children[1].style.width = '0px';
+	
+});
+
+socket.on("player-timeout", function(data) {
+	var pos = data.pos;
+	game.players[pos].node.children[1].style.width = '0px';
+	game.players[pos].isTimeout = true;
+	game.createResultNode(pos, 'Out of time');
 	
 });
 
@@ -236,7 +249,13 @@ function StartGame(){
 	}
 	
 	this.timer = function(data){
-		var childTimer=that.players[data.pos].node.children[0];
+		var childTimer=that.players[data.pos].node.children[1];
+		if(childTimer.offsetWidth >= 140){
+			childTimer.style.backgroundColor = '#009933';
+		}
+		if(childTimer.offsetWidth == 90){
+			childTimer.style.backgroundColor = 'yellow';
+		}
 		if(childTimer.offsetWidth == 30){
 			childTimer.style.backgroundColor = '#f00';
 		}
@@ -283,11 +302,17 @@ function StartGame(){
 	this.addView = function(){
 		var size = that.players.length;
 		that.players[size-1].node = makePlayerNode(positions[size-1]);
-		that.players[size-1].node.innerHTML = that.players[size-1].name +"(Rs."+that.players[size-1].cash+")";
+		//that.players[size-1].node.innerHTML = that.players[size-1].name +"(Rs."+that.players[size-1].cash+")";
+		
+		var childText = document.createElement("span");
+		childText.innerHTML = that.players[size-1].name +"(Rs."+that.players[size-1].cash+")";
+		that.players[size-1].node.appendChild(childText);
 		
 		var child = document.createElement("div");
 		child.className='childtimer';
 		that.players[size-1].node.appendChild(child);
+		
+		
 		
 		
 		gameTable.appendChild(that.players[size-1].node);
@@ -310,9 +335,12 @@ function StartGame(){
 	
 	butContinue.onclick = function(){that.response('continue')};
 	foldBut.onclick = function(){that.response('fold')};
+	
+	
 	callBut.onclick = function(){
 		var pos = that.recognizePlayer().pos;
-		if(that.players[pos].isBlind || isBlindRemaining(that.players)){
+		
+		if(that.players[pos].isBlind || !isBlindRemaining(that.players)){
 			socket.emit('call', {pos:pos});
 		}else{
 			infoArea.innerHTML = 'Cannot perform the action Call';	
