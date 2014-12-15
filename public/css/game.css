@@ -31,7 +31,17 @@
 	width:550px;
 	float:left;	
 }
-
+.button-controls{
+	width:500px;
+	margin: 0 auto;
+	background:#00CC33;
+	position:absolute;
+	bottom:-30px;
+	z-index:0;
+	left:0;
+	right:0;
+	visibility:hidden;	
+}
 .game-play{
 	width:1200px;
 	position:absolute;
@@ -39,6 +49,24 @@
 	left:-1200px;
 	top:0;
 }
+.stakeHolder{
+	width:200px;
+	display:inline-block;	
+	text-align:center;
+}
+.divInfo{
+	width:150px;
+	height:50px;
+	opacity:0.7;
+	background-color:#060;
+	position:absolute;	
+	border-radius:20px;
+	line-height:50px;
+	text-align:center;
+	color:#FFF;
+	font-weight:bold;
+}
+
 .game-table{
 	position:relative;
 	width:1000px;
@@ -69,6 +97,18 @@
 	border-radius:25px;
 	-moz-border-radius: 25px;
 }
+.cash-div{
+	width:40px;
+	height:40px;
+	background:#999900;
+	border-radius:20px;
+	position:absolute;	
+	text-align:center;
+	color:#FFFFFF;
+	font-weight:bold;
+	line-height:40px;
+	border:2px solid #666;
+}
 .boxx{
 	width:81px;
 	height:112px;
@@ -79,11 +119,7 @@
 	background:url(../images/backs.png) no-repeat;
 }
 
-.button-controls{
-	width:450px;
-	margin: 0 auto;
-	background:#00CC33;	
-}
+
 .button-controls button{
 	padding:5px 10px;
 	border-radius:15px;

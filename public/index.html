@@ -24,6 +24,9 @@
 		</div>       
         
         <div class="game-play" id="game-play">
+        
+        
+        	
         	<div class="game-table" id="game-table">
         		<div class="showinfo" id="showinfo">Waiting for the player to join....</div>
                 <div class="boxx"></div>
@@ -33,15 +36,17 @@
                 <div class="boxx5"></div>
                 <div class="boxx6"></div>
         	</div>
-            <div class="button-controls">
-            	<button>Call</button>
-                <button>Fold</button>
-                <button>-</button>
-                <span>Current Stake:Rs 5</span>
-                <button>+</button>
-                <button>See the Cards</button>
+            
+            <div class="button-controls" id="controls">
+            	<button id="callBut">Call</button>
+                <button id="foldBut">Fold</button>
+                <button id="dcrStake">-</button>
+                <span class="stakeHolder" id="showStake">Current Stake:Rs 5</span>
+                <button id="incrStake">+</button>
+                <button id="continue">Play Blind</button>
             
             </div>
+            
         </div>  
           
         
@@ -54,7 +59,7 @@
     
       
       
-      
+      <!--<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>-->
       <script src="/socket.io/socket.io.js"></script>
       <script src="js/functions.js" ></script> 
       <script src="js/animator.js"></script>

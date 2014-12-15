@@ -2,9 +2,11 @@ function Player(playerID, name) {
 	this.id = playerID;
 	this.name = name;
 	this.node='';
+	this.infoNode='';
 	this.seeButton;
 	this.isPlaying = false;
 	this.isBlind = true;
+	this.isFolded = false;
 	this.isTimeout = false;
 	this.isDisconnected = false;
 	this.tableID = "";

@@ -17,11 +17,13 @@ function Animator(){
 	var numPlayers=2;
 	
 	
-	this.animate = function(el,props,duration,pos,clb_function,el2){
+	this.animate = function(el,props,duration,pos,clb_function,el2,no_players){
 		that.element = el;
 		that.element2 = el2;
 		that.props = props;
+		numPlayers = no_players;
 		that.props.left = that.props.left + 10;
+		
 		that.duration = duration;
 		that.callback = clb_function;
 		posi = pos;
@@ -94,7 +96,7 @@ function Animator(){
 					//console.log(that.element.offsetTop);
 				}else{
 					var valtop = (that.element.offsetTop-that.props.top)/(that.duration/frequency)*counter;
-					that.element.style.top = that.element.offsetTop - valtop + 'px';	
+					that.element.style.top = that.element.offsetTop - Math.abs(valtop) + 'px';	
 					
 				}
 				

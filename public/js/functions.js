@@ -53,6 +53,7 @@ function cardNum(ranks) {
 }
 
 
+
 function isAllSame(cards){
 	for(var j=0;j<cards.length-1;j++){
 		
@@ -224,7 +225,7 @@ decideWinner = function(cardHands,pos){
 	return {cards:cardHands[0],pos:pos[0]};
 	
 }
-
+module.exports.decideWinner = decideWinner;
 
 function makeNode(){
 	var tempNode = document.createElement("div");
@@ -264,6 +265,17 @@ function setCardFront(card){
 	card.divNode.style.background='url(images/'+y+'.png) '+x+'px no-repeat';
 }
 
+
+function isBlindRemaining(players){
+	for(var i =0;i<players.length;i++){
+		if(players[i].isBlind){
+			return true;
+		}	
+	}
+	
+	return false;
+	
+}
 
 
 
