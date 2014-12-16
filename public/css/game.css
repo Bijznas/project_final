@@ -99,16 +99,24 @@
 	-moz-border-radius: 25px;
 }
 .cash-div{
-	width:40px;
-	height:40px;
-	background:#999900;
-	border-radius:20px;
 	position:absolute;	
 	text-align:center;
 	color:#FFFFFF;
 	font-weight:bold;
 	line-height:40px;
-	border:2px solid #666;
+}
+.pot{
+	position:absolute;
+	background:#060;
+	text-align:center;
+	width:120px;
+	height:35px;
+	padding:5px;
+	line-height:25px;
+	border-radius:25px;
+	top:140px;
+	left:430px;
+	
 }
 .boxx{
 	width:81px;
@@ -118,6 +126,9 @@
 	left:450px;	
 	top:0;
 	background:url(../images/backs.png) no-repeat;
+}
+.pot{
+	
 }
 
 

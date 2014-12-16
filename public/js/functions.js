@@ -225,7 +225,7 @@ decideWinner = function(cardHands,pos){
 	return {cards:cardHands[0],pos:pos[0]};
 	
 }
-module.exports.decideWinner = decideWinner;
+
 
 function makeNode(){
 	var tempNode = document.createElement("div");
@@ -268,7 +268,7 @@ function setCardFront(card){
 
 function isBlindRemaining(players){
 	for(var i =0;i<players.length;i++){
-		if(players[i].isBlind){
+		if(players[i].isBlind && !players[i].isDisconnected && !players[i].isTimeout){
 			return true;
 		}	
 	}
@@ -277,7 +277,14 @@ function isBlindRemaining(players){
 	
 }
 
-
+function isPresent(parentNode, childNode) {
+	if('contains' in parentNode) {
+		return parentNode.contains(childNode);
+	}
+	else {
+		return parentNode.compareDocumentPosition(childNode) % 16;
+	}
+}
 
 
 
@@ -301,3 +308,22 @@ function getStyle(el,styleProp)
 
     return y;
 }
+
+
+
+Node.prototype.contains = function(node) {
+    return (this.compareDocumentPosition(node) & 16) !== 0 || this === node;
+}
+
+	
+
+    function contains(a, b){
+      return a.contains ?
+        a != b && a.contains(b) :
+        !!(a.compareDocumentPosition(b) & 16);
+    }
+
+
+
+exports.decideWinner = decideWinner;
+exports.isBlindRemaining = isBlindRemaining;

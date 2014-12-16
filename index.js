@@ -57,8 +57,8 @@ io.on('connection', function(socket){
 					
 					gameState=3;
 					clearInterval(idCounter);
-					
-					io.sockets.emit('collect_boat', {stake: currentStake});
+					sumMoney = collectBoat(currentStake);
+					io.sockets.emit('collect_boat', {stake: currentStake, sum:sumMoney});
 					count = players.length;//this is for tracking the no. of players to receive ack. from them before the game can start
 					io.sockets.emit('distribute_cards', { players: players, deck:deck });
 					
@@ -101,10 +101,18 @@ io.on('connection', function(socket){
 		if(data.type == 'fold'){
 			players[data.pos].isFolded = true;	
 			io.sockets.emit('folded', {pos:data.pos});
-		}
-		
-		if(data.type == 'continue'){
-			io.sockets.emit('continueresponse', {pos:data.pos});
+		}else if(data.type == 'continue'){
+			var pos=data.pos;
+			var moneyToCall=0;
+			currentStake = data.stake;
+			if(players[pos].isBlind || !isBlindRemaining(players)){
+				moneyToCall = currentStake;	
+			}else{
+				moneyToCall = currentStake*2;
+			}
+			sumMoney += moneyToCall;
+			players[pos].cash = players[pos].cash - moneyToCall;
+			io.sockets.emit('continueresponse', {pos:data.pos,stake:data.stake,money:moneyToCall,cash:players[pos].cash, pot:sumMoney});
 		}
 		loopTurn(data.pos);
 		
@@ -155,7 +163,10 @@ io.on('connection', function(socket){
 			//if(check == data.pos)
 			}
 		}else{
-			console.log('player'+dontContinue+1+'wins');	
+			console.log('player'+dontContinue+1+'wins');
+			players[dontContinue].cash += sumMoney;
+			sumMoney =0;
+			io.sockets.emit('show-winner', { pos:dontContinue , cash:players[dontContinue].cash,opens:false});	
 		}
 			
 	}
@@ -165,6 +176,13 @@ io.on('connection', function(socket){
 		clearInterval(idTimeout);
 		var competing_cards = [];
 		var competing_pos = [];
+		var pos = data.pos;
+		
+		sumMoney += currentStake;
+		players[pos].cash = players[pos].cash - currentStake;
+		io.sockets.emit('callresponse', {pos:data.pos,cash:players[pos].cash, pot:sumMoney});
+		
+		
 		
 		var winner = {};
 		for(var i=0;i < players.length;i++){
@@ -176,13 +194,13 @@ io.on('connection', function(socket){
 		}
 		winner = functions.decideWinner(competing_cards,competing_pos);
 		
-		io.sockets.emit('show_winner_add_cash', {pos:6});
-		
+		players[winner.pos].cash += sumMoney;
+		sumMoney =0;
 		console.log('Player ' +(winner.pos+1));
 		
+		io.sockets.emit('show-winner', { pos:winner.pos , cash:players[winner.pos].cash, opens:true});
 		
-		
-		
+		setTimeout(autoStart,5000);
 		
 	});
 	socket.on('disconnect', function(){
@@ -229,6 +247,38 @@ io.on('connection', function(socket){
 		}else {
 			return pos;	
 		}
+	}
+	function collectBoat(money){
+		var sum=0;
+		for(var i =0;i<players.length;i++){
+			if(!players[i].isDisconnected){
+				players[i].cash -= money;
+				sum = sum+money;
+			}	
+		}
+		return sum;	
+	}
+	function isBlindRemaining(players){
+		for(var i =0;i<players.length;i++){
+			if(players[i].isBlind && !players[i].isDisconnected && !players[i].isTimeout){
+				return true;
+			}	
+		}
+		
+		return false;
+	
+	}
+	function clearCards(){
+		for(var i =0;i<players.length;i++){
+			players[i].hand.splice(0,players[i].hand.length);	
+		}
+	}
+	
+	function autoStart(){
+		console.log('Restarting');
+		
+		io.sockets.emit('restart', {pos:9});
+			
 	}
 
   
